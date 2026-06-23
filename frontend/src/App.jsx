@@ -45,109 +45,119 @@ function App(){
 
   
 
-  return(
-    
-    <div>
-     <div className="container">
+return (
+  <div className="container">
     <div className="card">
+
       <div className="logo">✨</div>
+
       <h1>AI Image Authenticity Analyzer</h1>
-      
-<p className="subtitle">
-  Detect AI-generated and manipulated images instantly.
-</p>
 
-      
+      <p className="subtitle">
+        Detect AI-generated and manipulated images instantly.
+      </p>
 
-
-      <input className="upload-section" type="file" onChange={(e)=>{ setfile(e.target.files[0])
-        setresult(null)
-      }}
+      <input
+        className="upload-section"
+        type="file"
+        onChange={(e) => {
+          setfile(e.target.files[0]);
+          setresult(null);
+        }}
       />
-      
-      {file && (
-        <div>
-          <div className="file-info">
-          <p>{file.name}</p>
-          <p>{Math.round(file.size/1024)} KB</p>
-        </div>
 
-          <img src={URL.createObjectURL(file)}
-          alt = "preview"
-          width= "300"
-          />
-      </div>
+      {file && (
+        <div className="result-container">
+
+          {/* LEFT SIDE */}
+          <div className="image-section">
+            <img
+              src={URL.createObjectURL(file)}
+              alt="preview"
+              className="preview-image"
+            />
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div className="analysis-section">
+
+            <div className="image-info">
+              <h2 id="imgh">Image Information</h2>
+
+              <p className="filename">
+                {file.name}
+              </p>
+
+              <p>
+                {Math.round(file.size / 1024)} KB
+              </p>
+            </div>
+
+            {result && (
+              <div className="result-card">
+
+                <h2 className="header">Analysis Result</h2>
+
+               <div className="score-bar">
+                <div
+                    className="score-fill"
+                    style={{ width: `${result.trust_score}%` }}
+                  ></div>
+                </div>
+
+<p>{result.trust_score}%</p>
+
+                <p className={`risk ${result.risk}`}>
+                  <strong>Risk:</strong> 
+                  {result.risk}
+                </p>
+                <p>
+                  <strong>AI Probability:</strong>{" "}
+                  {result.ai_detection.ai_prob}%
+                </p>
+
+                <p>
+                  <strong>Label:</strong>{" "}
+                  {result.ai_detection.label}
+                </p>
+
+              </div>
+            )}
+
+          </div>
+
+        </div>
       )}
 
-      
+      <button
+        className="analyze-btn"
+        onClick={analyzeImage}
+      >
+        Analyze Image
+      </button>
 
       <button
-      className="analyze-btn"
-       onClick={analyzeImage}
+        className="history-btn"
+        onClick={loadhistory}
       >
-  Analyze Image
-</button>
-<br />
-
-<button onClick={loadhistory}>View History</button>
-</div>
-  </div>
-
-
-      
-
-     
+        View History
+      </button>
 
       {loading && (
-  <div className="spinner"></div>
-)}
+        <div className="spinner"></div>
+      )}
 
-      {result && (
-  <div className="result-card">
-
-    <h2>Analysis Result</h2>
-
-    <div className="progress">
-  <div
-    className="progress-fill"
-    style={{width:`${result.trust_score}%`}}
-  >
-  </div>
-</div>
-
-    <div className="result-item">
-      <span>Risk</span>
-      <span>{result.risk}</span>
-    </div>
-
-    <div className="result-item">
-      <span>AI Probability</span>
-      <span>{result.ai_detection.ai_prob}%</span>
-    </div>
-
-    <div className="result-item">
-      <span>Label</span>
-      <span>{result.ai_detection.label}</span>
-    </div>
-
-  </div>
-)}
-    
-    
-    {history.map((item,index)=>(
-      
+      {history.map((item, index) => (
         <div key={index}>
           <p>{item.filename}</p>
           <p>{item.trust_score}</p>
-          <hr/> 
-          </div>
+          <hr />
+        </div>
       ))}
-      
 
     </div>
-  );
-
- 
+  </div>
+);
 }
 
 export default App;
