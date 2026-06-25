@@ -2,7 +2,6 @@ import { useState } from "react"
 import "./App.css"
 
 function App(){
-  // const [count, setCount] = useState(0);
   const [file,setfile] = useState(null) 
   const [result,setresult] = useState(null)
   const [loading, setloading] = useState(null)
@@ -44,6 +43,10 @@ function App(){
 
 
   
+
+
+
+
 
 return (
   <div className="container">
@@ -93,33 +96,70 @@ return (
               </p>
             </div>
 
+            <p>
+              Resolution:
+              {result?.img_info?.width}  X {result?.img_info?.height}
+            </p>
+
+            <p>
+              Format:
+              {result?.img_info?.format}
+            </p>
+
             {result && (
               <div className="result-card">
 
                 <h2 className="header">Analysis Result</h2>
 
-               <div className="score-bar">
+               <p><strong>Trust Score:</strong></p>
+
+              <div className="progress-bar">
                 <div
-                    className="score-fill"
-                    style={{ width: `${result.trust_score}%` }}
-                  ></div>
-                </div>
+                  className="progress-fill"
+                  style={{ width: `${result.trust_score}%` }}
+                ></div>
+              </div>
 
-<p>{result.trust_score}%</p>
+                <p>{result.trust_score}%</p>
 
-                <p className={`risk ${result.risk}`}>
-                  <strong>Risk:</strong> 
-                  {result.risk}
-                </p>
                 <p>
-                  <strong>AI Probability:</strong>{" "}
-                  {result.ai_detection.ai_prob}%
+                <strong>Risk:</strong>
+
+                 <span
+                    className={
+                    result.risk === "low"
+                     ? "risk-low"
+                      : result.risk === "medium"
+                        ? "risk-medium"
+                          : "risk-high"
+                    }
+                  >
+                  {result.risk}
+                 </span>
                 </p>
+
+
+                <p><strong>AI Probability:</strong></p>
+
+                  <div className="progress-bar">
+                  <div
+                      className="progress-fill ai-fill"
+                      style={{ width: `${result.ai_detection.ai_prob}%` }}
+                  ></div>
+                  </div>
+
+                <p>{result.ai_detection.ai_prob}%</p>
 
                 <p>
                   <strong>Label:</strong>{" "}
                   {result.ai_detection.label}
                 </p>
+
+                <h3>Why?</h3>
+
+               {result.reasons.map((reason, index) => (
+               <p key={index}>• {reason}</p>
+               ))}
 
               </div>
             )}
